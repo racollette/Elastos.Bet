@@ -123,8 +123,8 @@ function App() {
           <div className="card bets">
             <h4>Your bets</h4>
             <ul>
-              <li className="bet-option">Belgium: {ethers.utils.formatEther(myBets[0].toString())} ELA (wei)</li>
-              <li className="bet-option">Italy: {ethers.utils.formatEther(myBets[1].toString())} ELA (wei)</li>
+              <li className="bet-option">Belgium: {ethers.utils.formatEther(myBets[0].toString())} ELA</li>
+              <li className="bet-option">Italy: {ethers.utils.formatEther(myBets[1].toString())} ELA</li>
               {/* <li>Belgium: {myBets[0].toString()} ELA (wei)</li>
               <li>Italy: {myBets[1].toString()} ELA (wei)</li> */}
             </ul>
