@@ -1,0 +1,41 @@
+body {
+  /* margin: 0; */
+  font-family: BlinkMacSystemFont, "Segoe UI", "Roboto", "Helvetica Neue", Arial, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  /* min-height: 100vh; */
+  /* background-image: linear-gradient(330deg, #402640 0%, #1d2138 80%);
+  background-repeat: no-repeat; */
+  background-color: #141414 !important;
+}
+
+
+
+a,
+a:visited,
+a:hover,
+div {
+  outline: none;
+}
+
+/* charts */
+tspan,
+.recharts-legend-item-text {
+  font-size: 12px;
+}
+
+::placeholder {
+  /* Chrome, Firefox, Opera, Safari 10.1+ */
+  color: #d0d2d9;
+  opacity: 1; /* Firefox */
+}
+
+:-ms-input-placeholder {
+  /* Internet Explorer 10-11 */
+  color: #d0d2d9;
+}
+
+::-ms-input-placeholder {
+  /* Microsoft Edge */
+  color: #d0d2d9;
+}

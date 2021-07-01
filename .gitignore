@@ -1,0 +1,10 @@
+node_modules/
+build/
+www/
+package-lock.json
+
+.secret
+
+typings/
+.vscode/
+.bugs

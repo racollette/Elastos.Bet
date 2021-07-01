@@ -1,0 +1,51 @@
+.container {
+    color: #fff;
+    padding-top: 25px !important;
+    padding-bottom: 25px !important;
+}
+
+.row {
+    margin-top: 20px;
+    margin-bottom: 20px;
+}
+
+.card {
+    background-color: #262626 !important;
+}
+
+.jumbotron {
+    background-color: #262626 !important;
+    margin-bottom: 0 !important;
+    padding: 2rem 2rem !important;
+}
+
+.odds-text {
+    font-style: italic;
+    padding-top: 15px;
+    font-size: 1.2rem;
+}
+
+.pool-total {
+    padding-top: 10px;
+    font-size: 1.2rem;
+}
+
+.bets {
+    padding: 15px 30px 15px 30px;
+}
+
+.header {
+    padding: 30px;
+}
+
+.title {
+    font-weight: 600;
+}
+
+.date-text {}
+
+
+
+.bet-option {
+    font-size: 1.15rem;
+}
