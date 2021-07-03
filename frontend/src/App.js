@@ -5,8 +5,8 @@ import { ethers } from "ethers";
 import './app.css';
 
 const SIDE = {
-  BELGIUM: 0,
-  ITALY: 1,
+  ENGLAND: 0,
+  DENMARK: 1,
 };
 
 function App() {
@@ -28,18 +28,18 @@ function App() {
 
       const { signerAddress, predictionMarket } = await getBlockchain();
       const myBets = await Promise.all([
-        predictionMarket.betsPerGambler(signerAddress, SIDE.BELGIUM),
-        predictionMarket.betsPerGambler(signerAddress, SIDE.ITALY),
+        predictionMarket.betsPerGambler(signerAddress, SIDE.ENGLAND),
+        predictionMarket.betsPerGambler(signerAddress, SIDE.DENMARK),
       ]);
-      const bets = await Promise.all([predictionMarket.bets(SIDE.BELGIUM), predictionMarket.bets(SIDE.ITALY)]);
+      const bets = await Promise.all([predictionMarket.bets(SIDE.ENGLAND), predictionMarket.bets(SIDE.DENMARK)]);
       const betPredictions = {
-        labels: ["Belgium", "Italy"],
+        labels: ["England", "Denmark"],
         datasets: [
           {
             label: 'ELA',
             data: [ethers.utils.formatEther(bets[0]), ethers.utils.formatEther(bets[1])],
-            backgroundColor: ["#b3b300", "#00b300"],
-            hoverBackgroundColor: ["#808000", "#008000"],
+            backgroundColor: ["#0033cc", "#cc0000"],
+            hoverBackgroundColor: ["#002080", "#800000"],
             options: {
               responsive:true,
               maintainAspectRatio: false
@@ -112,8 +112,8 @@ function App() {
       <div className="row">
         <div className="col-sm-12">
           <div className="jumbotron">
-            <h2 className="text-center">Who will win Belgium vs. Italy in the Euro Cup?</h2>
-            <p className="date-text text-center">Friday, July 2nd (7:00PM UTC)</p>
+            <h2 className="text-center">Who will win England vs. Denmark in the Euro Cup?</h2>
+            <p className="date-text text-center">Wednesday, July 7th (7:00PM UTC)</p>
             <p className="odds-text text-center">Current odds</p>
             <div className="pie-container text-center">
               <Pie data={betPredictions}/>
@@ -126,10 +126,10 @@ function App() {
       <div className="row">
         <div className="col-sm-6">
           <div className="card">
-            <img src="./img/belgium1.png" alt="Belgium" />
+            <img src="./img/england1.png" alt="England" />
             <div className="card-body">
-              <h4 className="card-title">Belgium</h4>
-              <form className="form-inline" onSubmit={(e) => placeBet(SIDE.BELGIUM, e)}>
+              <h4 className="card-title">England</h4>
+              <form className="form-inline" onSubmit={(e) => placeBet(SIDE.ENGLAND, e)}>
                 <input type="text" className="form-control mb-2 mr-sm-2" placeholder="Bet amount (ELA)" />
                 {(betsPaused || matchFinished) ? (  <button type="submit" className="btn btn-primary mb-2" disabled>
                   Submit
@@ -143,11 +143,11 @@ function App() {
 
         <div className="col-sm-6">
           <div className="card">
-            <img src="./img/italy1.png" alt="Italy" />
+            <img src="./img/denmark1.png" alt="Denmark" />
             <div className="card-body">
-              <h4 className="card-title">Italy</h4>
+              <h4 className="card-title">Denmark</h4>
 
-              <form className="form-inline" onSubmit={(e) => placeBet(SIDE.ITALY, e)}>
+              <form className="form-inline" onSubmit={(e) => placeBet(SIDE.DENMARK, e)}>
                 <input type="text" className="form-control mb-2 mr-sm-2" placeholder="Bet amount (ELA)" />
                 {(betsPaused || matchFinished) ? (  <button type="submit" className="btn btn-primary mb-2" disabled>
                   Submit
@@ -178,8 +178,8 @@ function App() {
           <div className="card bets">
             <h4>Active Bets</h4>
              <ul>
-              <li className="bet-option">Belgium: {ethers.utils.formatEther(myBets[0].toString())} ELA <span>(Estimated potential winnings of {projected0} ELA)</span></li>
-              <li className="bet-option">Italy: {ethers.utils.formatEther(myBets[1].toString())} ELA <span>(Estimated potential winnings of {projected1} ELA)</span></li>
+              <li className="bet-option">England: {ethers.utils.formatEther(myBets[0].toString())} ELA <span>(Estimated potential winnings of {projected0.toPrecision(4)} ELA)</span></li>
+              <li className="bet-option">Denmark: {ethers.utils.formatEther(myBets[1].toString())} ELA <span>(Estimated potential winnings of {projected1.toPrecision(4)} ELA)</span></li>
             </ul>
             {matchFinished && (
              <>{claimAvailable ? (<button type="submit" className="btn btn-primary mb-2" onClick={(e) => withdrawGain()}>
