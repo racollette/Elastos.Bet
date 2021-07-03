@@ -1,5 +1,5 @@
 import { ethers, Contract } from "ethers";
-import PredictionMarket from "./contracts/PredictionMarket.json";
+import PredictionMarket from "./contracts/PredictionMarket2.json";
 
 const getBlockchain = () =>
   new Promise((resolve, reject) => {

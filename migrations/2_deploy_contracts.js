@@ -1,4 +1,5 @@
-const PredictionMarket = artifacts.require("PredictionMarket.sol");
+// const PredictionMarket = artifacts.require("PredictionMarket.sol");
+const PredictionMarket = artifacts.require("PredictionMarket2.sol");
 
 const SIDE = {
   BELGIUM: 0,

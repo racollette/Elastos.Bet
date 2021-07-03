@@ -1,6 +1,6 @@
 pragma solidity ^0.6.12;
 
-contract PredictionMarket {
+contract PredictionMarket2 {
     enum Side { Belgium, Italy }
     struct Result {
         Side winner;
@@ -8,6 +8,7 @@ contract PredictionMarket {
     }
     Result public result;
     bool public matchFinished;
+    bool public betsPaused;
 
     mapping(Side => uint) public bets;
     mapping(address => mapping(Side => uint)) public betsPerGambler;
@@ -19,6 +20,7 @@ contract PredictionMarket {
 
     function placeBet(Side _side) external payable {
         require(matchFinished == false, 'The match is over');
+        require(betsPaused == false, 'Betting is suspended');
         bets[_side] += msg.value;
         betsPerGambler[msg.sender][_side] += msg.value;
     }
@@ -31,6 +33,12 @@ contract PredictionMarket {
         betsPerGambler[msg.sender][Side.Belgium] = 0;
         betsPerGambler[msg.sender][Side.Italy] = 0;
         msg.sender.transfer(gain);
+    }
+
+    function pauseBets(bool _pause) external {
+        require(oracle == msg.sender, 'Only the oracle may call this function');
+        require(matchFinished == false, 'The match is already over');
+        betsPaused = _pause;
     }
 
     function reportResult(Side _winner, Side _loser) external {

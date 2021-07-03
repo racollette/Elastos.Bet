@@ -14,6 +14,14 @@ function App() {
   const [myBets, setMyBets] = useState(undefined);
   const [betPredictions, setBetPredictions] = useState(undefined);
   const [poolTotal, setPoolTotal] = useState(undefined);
+  const [statusText, setStatusText] = useState(undefined);
+  const [claimAvailable, setClaimAvailable] = useState(false);
+  const [betsPaused, setBetsPaused] = useState(false);
+  const [matchFinished, setMatchFinished] = useState(false);
+  const [projected0, setProjected0] = useState(0);
+  const [projected1, setProjected1] = useState(0);
+
+
 
   useEffect(() => {
     const init = async () => {
@@ -32,9 +40,37 @@ function App() {
             data: [ethers.utils.formatEther(bets[0]), ethers.utils.formatEther(bets[1])],
             backgroundColor: ["#b3b300", "#00b300"],
             hoverBackgroundColor: ["#808000", "#008000"],
+            options: {
+              responsive:true,
+              maintainAspectRatio: false
+            }
           },
         ],
+        
       };
+      const betsPaused = await predictionMarket.betsPaused();
+      const matchFinished = await predictionMarket.matchFinished();
+
+      const projected0 = ((parseFloat(ethers.utils.formatEther(myBets[0]))) / parseFloat(betPredictions.datasets[0].data[0])) * parseFloat(betPredictions.datasets[0].data[1])
+      const projected1 = ((parseFloat(ethers.utils.formatEther(myBets[1]))) / parseFloat(betPredictions.datasets[0].data[1])) * parseFloat(betPredictions.datasets[0].data[0])
+      setProjected0(projected0)
+      setProjected1(projected1)
+
+      if (matchFinished) {
+        setMatchFinished(true);
+        const outcome = await predictionMarket.result();
+        const winner = betPredictions.labels[outcome.winner]
+        setStatusText(`${winner} won! The oracle has reported the results. Winners may claim below.`);
+        const winningBet = parseFloat(ethers.utils.formatEther(myBets[outcome.winner].toString())) > 0 ? true : false;
+        if (winningBet) setClaimAvailable(true)
+      } else if (betsPaused && !matchFinished) {
+        setStatusText("The match is currently underway. Betting is closed.")
+        setBetsPaused(true);
+        setClaimAvailable(false);
+      } else {
+        setStatusText("The contract is now accepting bets!")
+        setClaimAvailable(false);
+      }
 
       setPredictionMarket(predictionMarket);
       setMyBets(myBets);
@@ -49,10 +85,11 @@ function App() {
     typeof myBets === "undefined" ||
     typeof betPredictions === "undefined"
   ) {
-    return "Loading...";
+    return <div className="text-center loader"><img src="./loader.svg" alt="Loader"/></div>
   }
 
   const placeBet = async (side, e) => {
+    console.log(predictionMarket)
     e.preventDefault();
     await predictionMarket.placeBet(side, { value: ethers.utils.parseEther(e.target.elements[0].value) });
   };
@@ -67,7 +104,7 @@ function App() {
       <div className="row">
         <div className="col-sm-12">
           <div className="card header">
-            <h1 className="text-center title">Elastos Degen Bet</h1>
+            <h1 className="text-center title">Elastos Sportsball Bet</h1>
           </div>
         </div>
       </div>
@@ -78,7 +115,7 @@ function App() {
             <h2 className="text-center">Who will win Belgium vs. Italy in the Euro Cup?</h2>
             <p className="date-text text-center">Friday, July 2nd (7:00PM UTC)</p>
             <p className="odds-text text-center">Current odds</p>
-            <div>
+            <div className="pie-container text-center">
               <Pie data={betPredictions}/>
             </div>
             <div className="pool-total text-center">Total: <b>{poolTotal} ELA</b></div>
@@ -94,9 +131,11 @@ function App() {
               <h4 className="card-title">Belgium</h4>
               <form className="form-inline" onSubmit={(e) => placeBet(SIDE.BELGIUM, e)}>
                 <input type="text" className="form-control mb-2 mr-sm-2" placeholder="Bet amount (ELA)" />
-                <button type="submit" className="btn btn-primary mb-2">
+                {(betsPaused || matchFinished) ? (  <button type="submit" className="btn btn-primary mb-2" disabled>
                   Submit
-                </button>
+                </button>):   <button type="submit" className="btn btn-primary mb-2">
+                  Submit
+                </button>}
               </form>
             </div>
           </div>
@@ -107,11 +146,14 @@ function App() {
             <img src="./img/italy1.png" alt="Italy" />
             <div className="card-body">
               <h4 className="card-title">Italy</h4>
+
               <form className="form-inline" onSubmit={(e) => placeBet(SIDE.ITALY, e)}>
                 <input type="text" className="form-control mb-2 mr-sm-2" placeholder="Bet amount (ELA)" />
-                <button type="submit" className="btn btn-primary mb-2">
+                {(betsPaused || matchFinished) ? (  <button type="submit" className="btn btn-primary mb-2" disabled>
                   Submit
-                </button>
+                </button>):   <button type="submit" className="btn btn-primary mb-2">
+                  Submit
+                </button>}
               </form>
             </div>
           </div>
@@ -121,28 +163,34 @@ function App() {
       <div className="row">
         <div className="col-sm-12">
           <div className="card bets">
-            <h4>Your bets</h4>
-            <ul>
-              <li className="bet-option">Belgium: {ethers.utils.formatEther(myBets[0].toString())} ELA</li>
-              <li className="bet-option">Italy: {ethers.utils.formatEther(myBets[1].toString())} ELA</li>
-              {/* <li>Belgium: {myBets[0].toString()} ELA (wei)</li>
-              <li>Italy: {myBets[1].toString()} ELA (wei)</li> */}
-            </ul>
+            <h4>Match status (<>
+            {(!betsPaused && !matchFinished) && <span style={{color: "green"}}>Upcoming</span>}
+            {(betsPaused && !matchFinished) && <span style={{color: "yellow"}}>Underway</span>}
+            {(matchFinished) && <span style={{color: "red"}}>Complete</span>}
+            </>)</h4>
+            <p>{statusText}</p>
           </div>
-        </div>
+        </div>  
       </div>
-     
 
       <div className="row">
         <div className="col-sm-12">
           <div className="card bets">
-            <h4>Were you right?</h4>
-            <button type="submit" className="btn btn-primary mb-2" onClick={(e) => withdrawGain()}>
+            <h4>Active Bets</h4>
+             <ul>
+              <li className="bet-option">Belgium: {ethers.utils.formatEther(myBets[0].toString())} ELA <span>(Estimated potential winnings of {projected0} ELA)</span></li>
+              <li className="bet-option">Italy: {ethers.utils.formatEther(myBets[1].toString())} ELA <span>(Estimated potential winnings of {projected1} ELA)</span></li>
+            </ul>
+            {matchFinished && (
+             <>{claimAvailable ? (<button type="submit" className="btn btn-primary mb-2" onClick={(e) => withdrawGain()}>
               Claim Winnings
-            </button>
+            </button>) : (
+            <h5>No winnings available to claim. Sorry!</h5>)}</>
+            )}
           </div>
-        </div>  
+        </div>
       </div>
+
   </div>
   );
 }

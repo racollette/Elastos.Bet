@@ -1,4 +1,6 @@
-const PredictionMarket = artifacts.require("PredictionMarket.sol");
+// const PredictionMarket = artifacts.require("PredictionMarket.sol");
+const PredictionMarket = artifacts.require("PredictionMarket2.sol");
+const truffleAssert = require('truffle-assertions');
 
 const SIDE = {
   BELGIUM: 0,
@@ -39,4 +41,24 @@ contract("PredictionMarket", (addresses) => {
 
     assert(balancesAfter[3].sub(balancesBefore[3]).isZero());
   });
+
+  it("Pause bets function should prevent deposits", async () => {
+    const predictionMarket = await PredictionMarket.new(oracle);
+    await predictionMarket.pauseBets(true, {from: oracle });
+
+    // await predictionMarket.placeBet(SIDE.ITALY, {from: gambler2, value: web3.utils.toWei("2") });
+
+    await truffleAssert.reverts(
+        predictionMarket.placeBet(SIDE.ITALY, {from: gambler2, value: web3.utils.toWei("2") }),
+        "Betting is suspended"
+    );
+
+    await predictionMarket.pauseBets(false, {from: oracle });
+    // const balanceBefore = await web3.eth.getBalance(gambler2);
+    await predictionMarket.placeBet(SIDE.ITALY, {from: gambler2, value: web3.utils.toWei("2") });
+    // const balanceAfter = await web3.eth.getBalance(gambler2);
+    // assert(balanceBefore.sub(balanceAfter).toString().slice(0, 3) === "199");
+ 
+  });
+
 });
