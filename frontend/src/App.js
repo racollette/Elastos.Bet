@@ -85,7 +85,7 @@ function App() {
     typeof myBets === "undefined" ||
     typeof betPredictions === "undefined"
   ) {
-    return <div className="text-center loader"><img src="./loader.svg" alt="Loader"/></div>
+    return <div className="text-center loader"><img src="./loader1.svg" alt="Loader"/></div>
   }
 
   const placeBet = async (side, e) => {
@@ -104,7 +104,7 @@ function App() {
       <div className="row">
         <div className="col-sm-12">
           <div className="card header">
-            <h1 className="text-center title">Elastos Sportsball Bet</h1>
+            <h1 className="text-center title">Elastos Prediction Market</h1>
           </div>
         </div>
       </div>
