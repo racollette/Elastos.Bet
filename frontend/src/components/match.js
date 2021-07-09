@@ -78,7 +78,8 @@ export function Match({contract, home, away, homePic, awayPic, title, time}) {
       setPoolTotal(parseFloat(betPredictions.datasets[0].data[0]) + parseFloat(betPredictions.datasets[0].data[1]));
     };
     init();
-  }, []);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []); 
 
   if (
     typeof predictionMarket === "undefined" ||
