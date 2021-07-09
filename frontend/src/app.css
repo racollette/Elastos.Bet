@@ -4,6 +4,17 @@
     padding-bottom: 25px !important;
 }
 
+.nav-tabs > a {
+    color: #fff !important;
+    background-color: #262626 !important;
+    margin-right: 10px;
+    border-radius: 5px !important;
+}
+
+.nav-tabs {
+    border-bottom: none !important;
+}
+
 .loader {
     margin-top: 30vh;
 }
@@ -24,9 +35,8 @@
 }
 
 .odds-text {
-    font-style: italic;
-    padding-top: 15px;
-    font-size: 1.2rem;
+    padding-top: 12px;
+    font-size: 1rem;
 }
 
 .pool-total {

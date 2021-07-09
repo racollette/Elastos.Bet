@@ -1,7 +1,8 @@
 pragma solidity ^0.6.12;
 
-contract PredictionMarket2 {
-    enum Side { England, Denmark }
+contract England_Italy {
+    // England = Home, Italy = Away
+    enum Side { Home, Away }
     struct Result {
         Side winner;
         Side loser;
@@ -30,8 +31,8 @@ contract PredictionMarket2 {
         require(gamblerBet > 0, 'You do not have a winning bet');
         require(matchFinished == true, 'The match is not over');
         uint gain = gamblerBet + bets[result.loser] * gamblerBet / bets[result.winner];
-        betsPerGambler[msg.sender][Side.England] = 0;
-        betsPerGambler[msg.sender][Side.Denmark] = 0;
+        betsPerGambler[msg.sender][Side.Home] = 0;
+        betsPerGambler[msg.sender][Side.Away] = 0;
         msg.sender.transfer(gain);
     }
 

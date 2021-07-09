@@ -73,12 +73,11 @@ module.exports = {
     // production: true    // Treats this network as if it was a public net. (default: false)
     // }
     elastos: {
-      // provider: () => new HDWalletProvider(mnemonic, "https://escrpc.elaphant.app"),
-      provider: () => new HDWalletProvider(mnemonic, "https://api.elastos.io/eth"),
+      provider: () => new HDWalletProvider(mnemonic, "https://escrpc.elaphant.app"),
+      // provider: () => new HDWalletProvider(mnemonic, "https://api.elastos.io/eth"),
       network_id: 20,
-      confirmations: 5,
-      timeoutBlocks: 100,
-      skipDryRun: true,
+      networkCheckTimeout: 1000000,
+      timeoutBlocks: 200
     },
   },
 

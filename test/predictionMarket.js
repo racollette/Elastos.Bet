@@ -1,10 +1,11 @@
 // const PredictionMarket = artifacts.require("PredictionMarket.sol");
-const PredictionMarket = artifacts.require("PredictionMarket2.sol");
+// const PredictionMarket = artifacts.require("PredictionMarket2.sol");
+const PredictionMarket = artifacts.require("England_Italy.sol");
 const truffleAssert = require('truffle-assertions');
 
 const SIDE = {
-  BELGIUM: 0,
-  ITALY: 1,
+  HOME: 0,
+  AWAY: 1,
 };
 
 contract("PredictionMarket", (addresses) => {
@@ -13,15 +14,15 @@ contract("PredictionMarket", (addresses) => {
   it("Should work", async () => {
     const predictionMarket = await PredictionMarket.new(oracle);
 
-    await predictionMarket.placeBet(SIDE.BELGIUM, { from: gambler1, value: web3.utils.toWei("1") });
+    await predictionMarket.placeBet(SIDE.HOME, { from: gambler1, value: web3.utils.toWei("1") });
 
-    await predictionMarket.placeBet(SIDE.BELGIUM, { from: gambler2, value: web3.utils.toWei("1") });
+    await predictionMarket.placeBet(SIDE.HOME, { from: gambler2, value: web3.utils.toWei("1") });
 
-    await predictionMarket.placeBet(SIDE.BELGIUM, { from: gambler3, value: web3.utils.toWei("2") });
+    await predictionMarket.placeBet(SIDE.HOME, { from: gambler3, value: web3.utils.toWei("2") });
 
-    await predictionMarket.placeBet(SIDE.ITALY, { from: gambler4, value: web3.utils.toWei("4") });
+    await predictionMarket.placeBet(SIDE.AWAY, { from: gambler4, value: web3.utils.toWei("4") });
 
-    await predictionMarket.reportResult(SIDE.BELGIUM, SIDE.ITALY, { from: oracle });
+    await predictionMarket.reportResult(SIDE.HOME, SIDE.AWAY, { from: oracle });
 
     const balancesBefore = (
       await Promise.all([gambler1, gambler2, gambler3, gambler4].map((gambler) => web3.eth.getBalance(gambler)))
@@ -46,19 +47,18 @@ contract("PredictionMarket", (addresses) => {
     const predictionMarket = await PredictionMarket.new(oracle);
     await predictionMarket.pauseBets(true, {from: oracle });
 
-    // await predictionMarket.placeBet(SIDE.ITALY, {from: gambler2, value: web3.utils.toWei("2") });
+    // await predictionMarket.placeBet(SIDE.AWAY, {from: gambler2, value: web3.utils.toWei("2") });
 
     await truffleAssert.reverts(
-        predictionMarket.placeBet(SIDE.ITALY, {from: gambler2, value: web3.utils.toWei("2") }),
+        predictionMarket.placeBet(SIDE.AWAY, {from: gambler2, value: web3.utils.toWei("2") }),
         "Betting is suspended"
     );
 
     await predictionMarket.pauseBets(false, {from: oracle });
     // const balanceBefore = await web3.eth.getBalance(gambler2);
-    await predictionMarket.placeBet(SIDE.ITALY, {from: gambler2, value: web3.utils.toWei("2") });
+    await predictionMarket.placeBet(SIDE.AWAY, {from: gambler2, value: web3.utils.toWei("2") });
     // const balanceAfter = await web3.eth.getBalance(gambler2);
     // assert(balanceBefore.sub(balanceAfter).toString().slice(0, 3) === "199");
- 
   });
 
 });

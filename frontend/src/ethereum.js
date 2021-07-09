@@ -1,7 +1,6 @@
 import { ethers, Contract } from "ethers";
-import PredictionMarket from "./contracts/PredictionMarket2.json";
 
-const getBlockchain = () =>
+const getBlockchain = (PredictionMarket) =>
   new Promise((resolve, reject) => {
     window.addEventListener("load", async () => {
       if (window.ethereum) {
